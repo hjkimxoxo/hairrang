@@ -120,4 +120,12 @@ public class GuestDaoImplTest {
 		list.stream().forEach(System.out::println);
 		System.out.println();
 	}
+	
+	@Test
+	public void test07getNextVal() {
+		System.out.printf("%s()%n", "test07eleteGuest");
+		int res = dao.getGuestCurrVal();
+		Assert.assertTrue(true);
+		System.out.println(res);
+	}
 }
