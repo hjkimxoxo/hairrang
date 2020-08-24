@@ -27,6 +27,27 @@ public class GuestDaoImpl implements GuestDao {
 	//int executeupdate -> insert, update, delete같은 데이터변경할때. sql문 실행하고 영향을 받은 행의 개수나 0 반환
 	//void close() -> statement객체의 db와 jdbc리소스 즉시 반환 
 
+	
+	@Override
+	public int getGuestCurrVal() {
+		String sql = "SELECT LAST_NUMBER FROM USER_SEQUENCES WHERE SEQUENCE_NAME = 'GUEST_SEQ'";
+		
+		try(Connection con = JdbcUtil.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery()){
+			
+			if(rs.next()) {
+				return rs.getInt("LAST_NUMBER");
+			}
+			
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return 0;
+	}
+
+	
 	@Override
 	public List<Guest> selectGuestByAll() {
 		String sql = "SELECT GUEST_NO, GUEST_NAME, BIRTHDAY, JOIN_DAY, PHONE, GENDER, GUEST_NOTE FROM GUEST ORDER BY GUEST_NO";
@@ -164,4 +185,5 @@ public class GuestDaoImpl implements GuestDao {
 		}
 		return guest;
 	}
+
 }

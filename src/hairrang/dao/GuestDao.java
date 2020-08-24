@@ -18,4 +18,6 @@ public interface GuestDao {
 	int updateGuest(Guest guest);
 	
 	int deleteGuest(Guest guest);
+
+	int getGuestCurrVal();
 }
