@@ -9,15 +9,17 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import hairrang.dto.Guest;
 import hairrang.service.GuestService;
 
-public class FrameGuest extends JFrame {
+public class FrameGuest extends JFrame implements ActionListener {
 
 	private GuestService gService;
 	private JPanel contentPane;
@@ -87,29 +89,7 @@ public class FrameGuest extends JFrame {
 		pBtn.setLayout(null);
 		
 		btnAdd = new JButton("추가");
-		btnAdd.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e) {
-				Guest addGuest;
-				try {
-					addGuest = pGuest.getGuest();
-					System.out.println(addGuest);
-					gService.addGuest(addGuest);
-					table.addRow(addGuest);
-					
-					curr++;
-					
-					JOptionPane.showMessageDialog(null, String.format("%s님이 추가되었습니다.",addGuest.getGuestName()));
-					
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				pGuest.clearTf();
-				pGuest.setTfNo(curr);
-			}
-		});
+		btnAdd.addActionListener(this);
 		btnAdd.setBounds(362, 0, 97, 23);
 		pBtn.add(btnAdd);
 		
@@ -130,14 +110,20 @@ public class FrameGuest extends JFrame {
 		
 		
 		table.setItems(guestList);
+		table.setComponentPopupMenu(createPopMenu());
 	}
 	
 	
 	
-	public void actionPerformed(ActionEvent e) throws ParseException {
+	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnAdd) {
-			if(e.getActionCommand().contentEquals("추가")) 
-				btnAddActionPerformed(e);
+			if(e.getActionCommand().contentEquals("추가"))
+				
+				try {
+					btnAddActionPerformed(e);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
 			if (e.getActionCommand().equals("수정")) 
 				btnUpdateActionPerformed();
 		}
@@ -154,25 +140,93 @@ public class FrameGuest extends JFrame {
 	}
 
 	
-	
+	//추가
 	private void btnAddActionPerformed(ActionEvent e) throws ParseException {
-		Guest addGuest = pGuest.getGuest();
-		System.out.println(addGuest);
-//		guestList.add(addGuest);
-//		table.addRow(addGuest);
-//		JOptionPane.showMessageDialog(null, String.format("%s님이 추가되었습니다.",addGuest.getGuestName()));
-//		pGuest.clearTf();
+		Guest addGuest;
+		try {
+			addGuest = pGuest.getGuest();
+			System.out.println(addGuest);
+			gService.addGuest(addGuest);
+			table.addRow(addGuest);
+			
+			curr++;
+			
+			JOptionPane.showMessageDialog(null, String.format("%s님이 추가되었습니다.",addGuest.getGuestName()));
+			
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		pGuest.clearTf();
+		pGuest.setTfNo(curr);
 		
 	}
 
+	//수정
 	private void btnUpdateActionPerformed() {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	//제거
 	private void btnCancelActionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		pGuest.clearTf();
 		
 	}
+	
+	
+//팝메뉴///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public JPopupMenu createPopMenu() {
+		JPopupMenu popMenu = new JPopupMenu();
+		
+		JMenuItem updateMenu = new JMenuItem("고객정보수정");
+		JMenuItem deleteMenu = new JMenuItem("고객정보삭제");
+		
+		popMenu.add(updateMenu);
+		popMenu.add(deleteMenu);
+		
+		updateMenu.addActionListener(addActionlistener);
+		deleteMenu.addActionListener(addActionlistener);
+		
+		return popMenu;
+	}
+	
+	ActionListener addActionlistener = new ActionListener() {
+		
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getActionCommand().equals("고객정보수정")) {
+				try {
+					actionUpdate();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			if(e.getActionCommand().equals("고객정보삭제")) {
+				actionDelete();
+			}
+				
+			
+		}
+	};
+
+	//팝업메뉴를 눌렀을때
+	protected void actionUpdate() throws ParseException {
+		btnAdd.setText("수정 완료");
+		Guest update = pGuest.getGuest();
+		
+		
+	}
+	
+	protected void actionDelete() {
+	// TODO Auto-generated method stub
+		
+	}
+
+	
 	
 }

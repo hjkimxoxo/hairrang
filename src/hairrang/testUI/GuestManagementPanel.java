@@ -13,11 +13,11 @@ import javax.swing.JTextField;
 
 import hairrang.dto.Guest;
 import hairrang.service.GuestService;
+import com.toedter.calendar.JDateChooser;
 
 public class GuestManagementPanel extends JPanel {
 	private JTextField tfNo;
 	private JTextField tfName;
-	private JTextField tfBirthday;
 	private JTextField tfJoinDay;
 	private JTextField tfPhone;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -25,6 +25,7 @@ public class GuestManagementPanel extends JPanel {
 	private JRadioButton rBtnMale;
 	private JTextField tfMemo;
 	private GuestService gService;
+	private JDateChooser dateChooser;
 
 	/**
 	 * Create the panel.
@@ -53,11 +54,6 @@ public class GuestManagementPanel extends JPanel {
 		JLabel lblBirthday = new JLabel("생년월일  : ");
 		lblBirthday.setBounds(68, 102, 70, 15);
 		add(lblBirthday);
-		
-		tfBirthday = new JTextField();
-		tfBirthday.setColumns(10);
-		tfBirthday.setBounds(153, 97, 116, 25);
-		add(tfBirthday);
 		
 		JLabel lblJoinDay = new JLabel("가입일자  : ");
 		lblJoinDay.setBounds(68, 135, 70, 15);
@@ -100,17 +96,27 @@ public class GuestManagementPanel extends JPanel {
 		tfMemo.setBounds(446, 99, 116, 21);
 		add(tfMemo);
 		tfMemo.setColumns(10);
+		
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(153, 96, 116, 21);
+		add(dateChooser);
 
 	}
 
 	
 
 	public Guest getGuest() throws ParseException {
+		
+		Calendar c = Calendar.getInstance();
+		//c.set(year, month, day);
+		Date birth = new Date(c.getTimeInMillis());
+		Date join = new Date(c.getTimeInMillis());
+		
 		//string->date
 		int guestNo = Integer.parseInt(tfNo.getText().trim());
 		String guestName = tfName.getText().trim();
-		Date birthday = new SimpleDateFormat("yyyy-MM-dd").parse(tfBirthday.getText().trim());
-		Date joinDay= new SimpleDateFormat("yyyy-MM-dd").parse(tfJoinDay.getText().trim());
+		Date birthday =  birth;
+		Date joinDay= join;
 		String phone = tfPhone.getText().trim();
 		int gender = rBtnFemale.isSelected() ? 1 : 2;
 		String guestNote = tfMemo.getText().trim();
@@ -118,11 +124,14 @@ public class GuestManagementPanel extends JPanel {
 
 	}
 	
-	//패널셋 dade->string
+	//패널셋 date->string
 	public void setGuest(Guest guest) {
+		
+		
 		tfNo.setText(String.valueOf(guest.getGuestNo()));
 		tfName.setText(guest.getGuestName());
-		tfBirthday.setText(new SimpleDateFormat("yyyy-MM-dd").format(guest.getBirthday()));
+		
+		//.setText(new SimpleDateFormat("yyyy-MM-dd").format(guest.getBirthday()));
 		tfJoinDay.setText(new SimpleDateFormat("yyyy-MM-dd").format(guest.getJoinDay()));
 		tfPhone.setText(guest.getPhone());
 		
@@ -139,7 +148,7 @@ public class GuestManagementPanel extends JPanel {
 	public void clearTf() {
 		tfNo.setText("");
 		tfName.setText("");
-		tfBirthday.setText("");
+		//dateChooser.
 		tfJoinDay.setText("");
 		tfPhone.setText("");
 		buttonGroup.clearSelection();
@@ -167,7 +176,5 @@ public class GuestManagementPanel extends JPanel {
 		
 		
 	}
-	
-	
 }
 	
