@@ -218,6 +218,7 @@ public class FrameGuest extends JFrame implements ActionListener {
 	protected void actionUpdate() throws ParseException {
 		btnAdd.setText("수정 완료");
 		Guest update = pGuest.getGuest();
+		//몰,,,
 		
 		
 	}
